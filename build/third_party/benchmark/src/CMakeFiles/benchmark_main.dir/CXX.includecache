@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../third_party/benchmark/include/benchmark/benchmark.h
+stdint.h
+-
+algorithm
+-
+cassert
+-
+cstddef
+-
+iosfwd
+-
+map
+-
+set
+-
+string
+-
+utility
+-
+vector
+-
+initializer_list
+-
+type_traits
+-
+utility
+-
+intrin.h
+-
+
+/home/zhangjie.tzhangj/leveldb/third_party/benchmark/src/benchmark_main.cc
+benchmark/benchmark.h
+/home/zhangjie.tzhangj/leveldb/third_party/benchmark/src/benchmark/benchmark.h
+

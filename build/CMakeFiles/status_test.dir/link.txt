@@ -1,0 +1,1 @@
+/usr/bin/c++   -fno-exceptions -fno-rtti -O3 -DNDEBUG   CMakeFiles/status_test.dir/util/testutil.cc.o CMakeFiles/status_test.dir/util/status_test.cc.o  -o status_test libleveldb.a lib/libgmock.a lib/libgtest.a third_party/benchmark/src/libbenchmark.a -lsnappy -pthread /usr/lib/x86_64-linux-gnu/librt.so 
