@@ -354,7 +354,7 @@ Status DBImpl::Recover(VersionEdit* edit, bool* save_manifest) {
                                      "exists (error_if_exists is true)");
     }
   }
-  
+
   //从Manifest加载版本数据，并保存可能需要的Manifest文件
   // 第一次初始化，默认 = false
   s = versions_->Recover(save_manifest);
@@ -879,7 +879,7 @@ Status DBImpl::OpenCompactionOutputFile(CompactionState* compact) {
     // 新创建的sst属于半成本，需要记录下来，等到compact完成，在删除记录
     pending_outputs_.insert(file_number);
 
-    // 新的 output 
+    // 新的 output
     CompactionState::Output out;
     out.number = file_number;
     out.smallest.Clear();
@@ -960,7 +960,7 @@ Status DBImpl::InstallCompactionResults(CompactionState* compact) {
   // Add compaction outputs
   // 将参与本次compact 的 file 添加到删除名单中
   compact->compaction->AddInputDeletions(compact->compaction->edit());
-  
+
   // 将生成的新的文件，添加到version_edit中
   const int level = compact->compaction->level();
   for (size_t i = 0; i < compact->outputs.size(); i++) {
@@ -1006,7 +1006,7 @@ Status DBImpl::DoCompactionWork(CompactionState* compact) {
   bool has_current_user_key = false;
   SequenceNumber last_sequence_for_key = kMaxSequenceNumber;
 
-  
+
   while (input->Valid() && !shutting_down_.load(std::memory_order_acquire)) {
     // Prioritize immutable compaction work
 
@@ -1060,7 +1060,8 @@ Status DBImpl::DoCompactionWork(CompactionState* compact) {
         drop = true;  // (A)
       } else if (ikey.type == kTypeDeletion &&                            // 删除类型
                  ikey.sequence <= compact->smallest_snapshot &&           // 小于快照版本
-                 compact->compaction->IsBaseLevelForKey(ikey.user_key))   // 不存在于更高的level中,即level - 2 ~ n
+                 compact->compaction->IsBaseLevelForKey(ikey.user_key))   // 不存在于更高的level中,因为这里是在和level - 1进行compaction,所以检查level - 2 ~ n
+                    // 这里目的在于需要保证该删除操作之前的历史key不存在于DB中,才可以删除该删除操作,不然会将旧数据暴露出来
       {
         // For this user key:
         // (1) there is no data in higher levels
@@ -1201,7 +1202,7 @@ Iterator* DBImpl::NewInternalIterator(const ReadOptions& options,
   // memtable iter
   list.push_back(mem_->NewIterator());
   mem_->Ref();
-  
+
   // immemtable iter
   if (imm_ != nullptr) {
     list.push_back(imm_->NewIterator());

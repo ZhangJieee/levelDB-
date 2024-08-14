@@ -68,6 +68,7 @@ static const SequenceNumber kMaxSequenceNumber = ((0x1ull << 56) - 1);
 
 
 // InternalKey格式: user key + sequence + type(kTypeDeletion or kTypeValue)
+// 排序方式,首先按照字节序排序user key,相同key则按照seq倒序排序
 struct ParsedInternalKey {
   Slice user_key;
   SequenceNumber sequence;
@@ -200,7 +201,7 @@ class LookupKey {
   /*
    * lookup key 结构
    * | Size (int32可变) | User Key (string) | sequence number (7 bytes) | value type (1 byte) |
-   * 
+   *
    */
   Slice memtable_key() const { return Slice(start_, end_ - start_); }
 
@@ -208,7 +209,7 @@ class LookupKey {
   /*
    * internal key 结构
    * | User Key (string) | sequence number (7 bytes) | value type (1 byte) |
-   *  
+   *
    */
   Slice internal_key() const { return Slice(kstart_, end_ - kstart_); }
 
